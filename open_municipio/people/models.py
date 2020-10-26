@@ -208,8 +208,10 @@ class Person(models.Model, MonitorizedItem):
         gc = None
 
         try:
-            gc = GroupCharge.objects.current(moment).get(charge__person=self,charge__institution=CityCouncil().as_institution)
-        except ObjectDoesNotExist:  
+#            gc = GroupCharge.objects.current(moment).get(charge__person=self,charge__institution=CityCouncil().as_institution)
+            gc = GroupCharge.objects.current(moment).filter(charge__person=self,charge__institution=CityCouncil().as_institution)[0]
+#        except ObjectDoesNotExist:  
+        except IndexError:
             # no group charge
             pass
     
@@ -640,16 +642,20 @@ class InstitutionCharge(Charge):
         """
         if self.institution.institution_type == Institution.COUNCIL:
             try:
-                return GroupCharge.objects.select_related().current(moment=moment).get(charge__id=self.id)
-            except GroupCharge.DoesNotExist:
+#                return GroupCharge.objects.select_related().current(moment=moment).get(charge__id=self.id)
+                return GroupCharge.objects.select_related().current(moment=moment).filter(charge__id=self.id)[0]
+#            except GroupCharge.DoesNotExist:
+            except IndexError:
                 return None
 
         elif self.original_charge and \
             (self.institution.institution_type == Institution.COMMITTEE or \
              self.institution.institution_type == Institution.JOINT_COMMITTEE):
             try:
-                return GroupCharge.objects.select_related().current(moment=moment).get(charge=self.original_charge)
-            except GroupCharge.DoesNotExist:
+#                return GroupCharge.objects.select_related().current(moment=moment).get(charge=self.original_charge)
+                return GroupCharge.objects.select_related().current(moment=moment).filter(charge=self.original_charge)[0]
+#            except GroupCharge.DoesNotExist:
+            except IndexError:
                 return None
 
         else:
