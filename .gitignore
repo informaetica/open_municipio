@@ -1,6 +1,13 @@
-.DS_Store
+# Emacs
 *~
-**/*.pyc
+\#*\#
+
+# Python
+*.py[cod]
+__pycache__
+
+# Misc
+.DS_Store
 *.sqlite
 .*.swp
 .idea
