@@ -1,5 +1,3 @@
-__author__ = 'guglielmo'
-
 from django.contrib import admin
 from open_municipio.data_import.models import *
 from django.utils.translation import ugettext as _
