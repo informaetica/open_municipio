@@ -63,7 +63,7 @@ class ChargeQuerySet(TimeFramedQuerySet):
         elif isinstance(moment, basestring):
             moment = datetime.strptime(moment, "%Y-%m-%d")
 
-        qs = self.exclude(start_date__gt=moment).exclude(end_date__lt=moment).annotate(n_acts=Count('presented_act_set')).order_by('-n_acts')
+        qs = self.exclude(start_date__gt=moment).exclude(end_date__lt=moment).annotate(n_acts=Count('presented_act_set')).order_by('-n_acts', 'person__last_name', 'person__first_name', 'person__last_name', 'person__first_name')
 
         return qs
 
@@ -82,7 +82,7 @@ class ChargeQuerySet(TimeFramedQuerySet):
             Q(actsupport__act__audit__isnull=False),
             Q(actsupport__support_type=ActSupport.SUPPORT_TYPE.first_signer)).\
             exclude(start_date__gt=moment).exclude(end_date__lt=moment).\
-            annotate(n_acts=Count('actsupport')).order_by('-n_acts')
+            annotate(n_acts=Count('actsupport')).order_by('-n_acts', 'person__last_name', 'person__first_name')
 
         return qs
 
@@ -96,7 +96,7 @@ class ChargeQuerySet(TimeFramedQuerySet):
 
         qs = self.extra(select={'perc_rebel':'(n_rebel_votations * 100.0) / GREATEST (n_absent_votations + n_present_votations,1)'}).\
             exclude(start_date__gt=moment).exclude(end_date__lt=moment).\
-            order_by('-perc_rebel')
+            order_by('-perc_rebel', 'person__last_name', 'person__first_name')
         return qs
 
     def rank_least_absent(self, moment=None):
@@ -108,7 +108,7 @@ class ChargeQuerySet(TimeFramedQuerySet):
 
         qs = self.extra(select={'perc_absences':'(n_absent_votations * 100.0) / GREATEST (n_absent_votations + n_present_votations,1)'}).\
             exclude(start_date__gt=moment).exclude(end_date__lt=moment).\
-            order_by('perc_absences')
+            order_by('perc_absences', 'person__last_name', 'person__first_name')
         return qs
 
     def rank_most_motions(self, moment=None):
@@ -125,7 +125,7 @@ class ChargeQuerySet(TimeFramedQuerySet):
                     Q(actsupport__act__agenda__isnull=False),
                     Q(actsupport__support_type=ActSupport.SUPPORT_TYPE.first_signer)).\
                 exclude(start_date__gt=moment).exclude(end_date__lt=moment).\
-                annotate(n_acts=Count('actsupport')).order_by('-n_acts')
+                annotate(n_acts=Count('actsupport')).order_by('-n_acts', 'person__last_name', 'person__first_name')
 
         return qs
 
