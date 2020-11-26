@@ -1,8 +1,3 @@
-'''
-Created on 14/set/2013
-
-@author: spegni
-'''
 import datetime
 from optparse import make_option
 
