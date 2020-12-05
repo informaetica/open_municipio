@@ -63,7 +63,7 @@ class ChargeQuerySet(TimeFramedQuerySet):
         elif isinstance(moment, basestring):
             moment = datetime.strptime(moment, "%Y-%m-%d")
 
-        qs = self.exclude(start_date__gt=moment).exclude(end_date__lt=moment).annotate(n_acts=Count('presented_act_set')).order_by('-n_acts', 'person__last_name', 'person__first_name', 'person__last_name', 'person__first_name')
+        qs = self.exclude(start_date__gt=moment).exclude(end_date__lt=moment).annotate(n_acts=Count('presented_act_set')).order_by('-n_acts', 'person__last_name', 'person__first_name')
 
         return qs
 
